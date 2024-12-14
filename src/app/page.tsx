@@ -29,7 +29,7 @@ export default function Home() {
         <div className="flex flex-col gap-y-3 mt-5">
           <p>Se você não possui um login ativo</p>
 
-          <Link href={"/"} className="text-[#0C21C1] font-semibold">
+          <Link href={"/register"} className="text-[#0C21C1] font-semibold">
             Cadastre-se aqui!
           </Link>
         </div>
@@ -68,7 +68,7 @@ export default function Home() {
 
           <button
             type="submit"
-            className="bg-green-900 py-3.5 rounded-[32px] w-full text-white mt-14 shadow-2xl"
+            className="bg-green-900 py-3.5 rounded-[32px] w-full text-white-100 mt-14 shadow-2xl"
           >
             Login
           </button>
