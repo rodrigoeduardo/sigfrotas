@@ -1,11 +1,11 @@
 import { redirect } from "next/navigation";
 
 export default async function Home() {
-  const user = undefined;
+  const user = {};
 
   if (!user) {
     redirect("/login");
   }
 
-  return <>Home</>;
+  redirect("/routes");
 }
