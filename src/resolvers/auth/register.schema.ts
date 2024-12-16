@@ -2,10 +2,12 @@ import * as z from "zod";
 
 export const registerSchema = z
   .object({
-    cnpj: z.string().min(14, { message: "Adicione um CNPJ válido." }),
+    name: z.string().min(1, { message: "Adicione um nome válido" }),
+    cpf: z.string().min(11, { message: "Adicione um CPF válido." }),
     email: z.string().email({
       message: "Adicione um e-mail válido.",
     }),
+    position: z.string().min(1, { message: "Escolha um cargo." }),
     username: z
       .string()
       .min(3, { message: "Adicione um nome de usuário válido." }),

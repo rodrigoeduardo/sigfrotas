@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Public_Sans, Poppins } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "sonner";
+import { TanstackProvider } from "@/providers/TanstackQuery";
 
 const publicSans = Public_Sans({
   variable: "--font-public-sans",
@@ -28,7 +30,21 @@ export default function RootLayout({
       <body
         className={`${publicSans.variable} ${poppins.variable} antialiased font-poppins`}
       >
-        {children}
+        <TanstackProvider>
+          <Toaster
+            position="top-center"
+            richColors
+            toastOptions={{
+              style: {
+                padding: "1rem",
+                display: "flex",
+                alignItems: "center",
+                gap: "1rem",
+              },
+            }}
+          />
+          {children}
+        </TanstackProvider>
       </body>
     </html>
   );

@@ -1,67 +1,135 @@
 "use client";
+import { useRegisterUser } from "@/http/users/queries/use-register-user";
+import { UserRegister } from "@/http/users/requests/register-user";
 import {
   registerSchema,
   RegisterSchema,
 } from "@/resolvers/auth/register.schema";
+import { Position } from "@/types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function Register() {
+  const router = useRouter();
+
+  const { mutate, isPending } = useRegisterUser();
+
   const form = useForm<RegisterSchema>({
     mode: "onBlur",
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      cnpj: "",
+      name: "",
+      cpf: "",
       email: "",
+      position: "",
       username: "",
       password: "",
       confirmPassword: "",
     },
   });
 
-  const handleSubmit = (data: RegisterSchema) => {
-    console.log(data);
-    return data;
+  const handleSubmit = (values: RegisterSchema) => {
+    const user: UserRegister = {
+      username: values.username,
+      senha: values.password,
+      cargo: values.position as Position,
+      pessoa: {
+        cpf: values.cpf,
+        email: values.email,
+        nome: values.name,
+      },
+    };
+
+    mutate(user, {
+      onSuccess: () => {
+        toast.success("Usuário cadastrado com sucesso!", {
+          description: "Faça login com suas credenciais.",
+        });
+        router.push("/login");
+      },
+      onError: () => {
+        toast.error("Erro ao tentar realizar o cadastro", {
+          description: "Por favor, tente novamente em instantes.",
+        });
+      },
+    });
   };
 
   return (
-    <div className="flex max-md:flex-col-reverse gap-8 items-center justify-center h-screen px-4">
-      <div className="flex flex-col max-w-[442px] w-full px-7 py-6 border border-gray-600 rounded-[10px]">
+    <div className="flex max-lg:flex-col-reverse gap-8 items-center justify-center lg:h-screen px-4 my-4">
+      <div className="flex flex-col max-w-[760px] w-full px-7 py-6 border border-gray-600 rounded-[10px]">
         <h1 className="font-medium text-3xl">Cadastre-se</h1>
 
         <form
           className="mt-12 flex flex-col"
           onSubmit={form.handleSubmit(handleSubmit)}
         >
-          <label className="text-black">CNPJ</label>
-          <input
-            type="text"
-            placeholder="Digite aqui"
-            className="placeholder:text-gray-200 text-sm font-light w-full border border-black-400 rounded-md px-7 py-5 mt-2.5"
-            {...form.register("cnpj")}
-          />
-          <p className="text-red-500 text-xs mt-2">
-            {form.formState.errors.cnpj?.message}
-          </p>
+          <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-3">
+            <div>
+              <label className="text-black">Nome</label>
+              <input
+                type="text"
+                placeholder="Digite aqui"
+                className="placeholder:text-gray-200 text-sm font-light w-full border border-black-400 rounded-md px-5 py-3 mt-2.5"
+                {...form.register("name")}
+              />
+              <p className="text-red-500 text-xs mt-2">
+                {form.formState.errors.name?.message}
+              </p>
+            </div>
 
-          <label className="text-black mt-3">E-mail</label>
-          <input
-            type="email"
-            placeholder="Digite aqui"
-            className="placeholder:text-gray-200 text-sm font-light w-full border border-black-400 rounded-md px-7 py-5 mt-2.5"
-            {...form.register("email")}
-          />
-          <p className="text-red-500 text-xs mt-2">
-            {form.formState.errors.email?.message}
-          </p>
+            <div>
+              <label className="text-black">CPF</label>
+              <input
+                type="text"
+                placeholder="Digite aqui"
+                className="placeholder:text-gray-200 text-sm font-light w-full border border-black-400 rounded-md px-5 py-3 mt-2.5"
+                {...form.register("cpf")}
+              />
+              <p className="text-red-500 text-xs mt-2">
+                {form.formState.errors.cpf?.message}
+              </p>
+            </div>
+
+            <div>
+              <label className="text-black">E-mail</label>
+              <input
+                type="email"
+                placeholder="Digite aqui"
+                className="placeholder:text-gray-200 text-sm font-light w-full border border-black-400 rounded-md px-5 py-3 mt-2.5"
+                {...form.register("email")}
+              />
+              <p className="text-red-500 text-xs mt-2">
+                {form.formState.errors.email?.message}
+              </p>
+            </div>
+
+            <div>
+              <label className="text-black">Cargo</label>
+              <select
+                className="placeholder:text-gray-200 text-sm font-light w-full border border-black-400 rounded-md px-5 py-3 mt-2.5"
+                defaultValue={undefined}
+                {...form.register("position")}
+              >
+                <option value={Position.MANAGER}>Gerente</option>
+                <option value={Position.DRIVER}>Motorista</option>
+                {/* <option value={Cargo.CLIENTE}>Cliente</option> */}
+              </select>
+              <p className="text-red-500 text-xs mt-2">
+                {form.formState.errors.position?.message}
+              </p>
+            </div>
+          </div>
 
           <label className="text-black mt-3">Nome de usuário</label>
           <input
             type="text"
             placeholder="Digite aqui"
-            className="placeholder:text-gray-200 text-sm font-light w-full border border-black-400 rounded-md px-7 py-5 mt-2.5"
+            className="placeholder:text-gray-200 text-sm font-light w-full border border-black-400 rounded-md px-5 py-3 mt-2.5"
             {...form.register("username")}
           />
           <p className="text-red-500 text-xs mt-2">
@@ -72,7 +140,7 @@ export default function Register() {
           <input
             type="password"
             placeholder="Digite aqui"
-            className="placeholder:text-gray-200 text-sm font-light w-full border border-black-400 rounded-md px-7 py-5 mt-2.5"
+            className="placeholder:text-gray-200 text-sm font-light w-full border border-black-400 rounded-md px-5 py-3 mt-2.5"
             {...form.register("password")}
           />
           <p className="text-red-500 text-xs mt-2">
@@ -83,7 +151,7 @@ export default function Register() {
           <input
             type="password"
             placeholder="Digite aqui"
-            className="placeholder:text-gray-200 text-sm font-light w-full border border-black-400 rounded-md px-7 py-5 mt-2.5"
+            className="placeholder:text-gray-200 text-sm font-light w-full border border-black-400 rounded-md px-5 py-3 mt-2.5"
             {...form.register("confirmPassword")}
           />
           <p className="text-red-500 text-xs mt-2">
@@ -93,6 +161,7 @@ export default function Register() {
           <button
             type="submit"
             className="bg-black-100 py-4 rounded-md w-full text-white-100 mt-10 shadow-2xl"
+            disabled={isPending}
           >
             Cadastrar
           </button>
