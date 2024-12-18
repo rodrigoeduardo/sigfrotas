@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export function VehicleTracker() {
   return (
-    <div className="w-full max-w-md mx-auto p-4 bg-white">
+    <div className="w-full bg-white">
       {/* Header */}
       <div className="space-y-4 mb-6">
         <div className="flex items-center justify-between">
@@ -18,13 +18,14 @@ export function VehicleTracker() {
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="ready" className="w-full">
+      <Tabs defaultValue="enroute" className="w-full">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="ready">Pronto</TabsTrigger>
           <TabsTrigger value="enroute">A caminho</TabsTrigger>
           <TabsTrigger value="delivered">Entregue</TabsTrigger>
         </TabsList>
-        <TabsContent value="ready" className="mt-4 space-y-4">
+        <TabsContent value="ready" className="mt-4 space-y-4"></TabsContent>
+        <TabsContent value="enroute" className="mt-4 space-y-4">
           {/* Vehicle Items */}
           {[1, 2].map((item) => (
             <div
@@ -37,7 +38,7 @@ export function VehicleTracker() {
                 </div>
                 <div className="space-y-1">
                   <div className="font-medium">EShipGO123</div>
-                  <div className="text-sm text-yellow-600">A espera</div>
+                  <div className="text-sm text-yellow-600">A caminho</div>
                   <div className="text-xs text-muted-foreground">
                     Mai, 04 8:15 PM
                   </div>
@@ -49,8 +50,7 @@ export function VehicleTracker() {
             </div>
           ))}
         </TabsContent>
-        <TabsContent value="enroute" />
-        <TabsContent value="delivered" />
+        <TabsContent value="delivered" className="mt-4 space-y-4" />
       </Tabs>
     </div>
   );

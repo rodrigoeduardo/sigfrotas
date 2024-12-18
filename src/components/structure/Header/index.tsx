@@ -29,7 +29,7 @@ export function Header() {
           className="text-green-900 text-xs px-4 py-3 h-fit"
           onClick={handleSignOut}
         >
-          Sign Out
+          Sair
         </button>
       </div>
     </header>
