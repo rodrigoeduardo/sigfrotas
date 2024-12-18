@@ -5,10 +5,15 @@ export type Credentials = {
   password: string;
 };
 
+type LoginResponse = {
+  token: string;
+  refreshToken: string;
+};
+
 export async function login({ username, password }: Credentials) {
-  const response = await api.post("/auth", {
+  const response = await api.post<LoginResponse>("/auth/login", {
     username,
-    password,
+    senha: password,
   });
 
   return response;

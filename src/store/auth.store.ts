@@ -1,9 +1,8 @@
+import { queryClient } from "@/lib/react-query";
 import { UserLogged } from "@/types/user";
 import { jwtDecodeUtil } from "@/utils/jwt.utils";
 import { StateCreator } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-
-// import { queryClient } from "@/lib/react-query";
 
 type State = {
   isAuthenticated: boolean;
@@ -40,13 +39,8 @@ const createAuthSlice: StateCreator<AuthSlice> = (set) => {
       });
     },
     logout: () => {
-      // queryClient.clear();
-      set({
-        isAuthenticated: false,
-        accessToken: null,
-        userLogged: null,
-        refreshToken: null,
-      });
+      queryClient.clear();
+      set(initialState);
     },
   };
 };

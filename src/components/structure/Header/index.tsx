@@ -1,12 +1,17 @@
 "use client";
+import { useStore } from "@/store";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { MdChevronRight } from "react-icons/md";
 
 export function Header() {
+  const router = useRouter();
+  const { logout } = useStore.getState();
+
   function handleSignOut() {
-    // TODO
-    return;
+    logout();
+    router.push("/login");
   }
   return (
     <header className="w-full h-full max-h-[94px] flex items-end justify-center shadow-xl">
