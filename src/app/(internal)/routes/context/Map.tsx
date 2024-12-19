@@ -1,6 +1,6 @@
 "use client";
 
-import L, { LatLng, marker } from "leaflet";
+import L, { LatLng } from "leaflet";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import RoutingMachine from "./RoutingMachine";
 import { useEffect, useMemo, useRef } from "react";
@@ -14,7 +14,7 @@ interface MapProps {
 }
 
 const MapComponent = ({ markers }: MapProps) => {
-  const rMachine = useRef(null);
+  const rMachine = useRef<L.Routing.Control | null>(null);
 
   const waypoints = useMemo(
     () => markers.map((marker) => marker.latLng),
