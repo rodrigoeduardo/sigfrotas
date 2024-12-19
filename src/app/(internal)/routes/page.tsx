@@ -6,7 +6,7 @@ import { Order } from "@/types/order";
 import { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { useGetMultipleLatLng } from "@/http/geocode/queries/useGetMultipleLatLng";
-import { LatLng } from "leaflet";
+import L, { LatLng } from "leaflet";
 
 const MapComponent = dynamic(() => import("./context/Map"), { ssr: false });
 
@@ -89,6 +89,7 @@ export default function Routes() {
           +(geometry?.lat.toFixed(3) ?? 0),
           +(geometry?.lng.toFixed(3) ?? 0)
         ),
+        latLng: L.latLng(geometry?.lat ?? 0, geometry?.lng ?? 0),
         address: selectedOrders[index].address,
       };
     });
@@ -101,7 +102,16 @@ export default function Routes() {
       <VehicleTracker />
 
       <div className="flex flex-col gap-4">
-        <MapComponent markers={markers} />
+        <MapComponent
+          markers={[
+            {
+              latLng: L.latLng(-5.839294, -35.201653),
+              address: "Transportadora AL",
+              position: L.latLng(-5.839294, -35.201653),
+            },
+            ...markers,
+          ]}
+        />
         <div className="grid grid-cols-2 gap-4">
           <RouteManager
             selectedOrders={selectedOrders}

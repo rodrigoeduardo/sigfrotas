@@ -5,6 +5,8 @@ import { useStore } from "@/store";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
+import "../../utils/globals.css";
+
 export default function RootLayout({
   children,
 }: Readonly<{

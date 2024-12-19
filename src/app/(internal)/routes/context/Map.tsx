@@ -1,16 +1,32 @@
 "use client";
 
-import { LatLng } from "leaflet";
+import L, { LatLng, marker } from "leaflet";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import RoutingMachine from "./RoutingMachine";
+import { useEffect, useMemo, useRef } from "react";
 
 interface MapProps {
   markers: {
     position: LatLng;
+    latLng: L.LatLng;
     address: string;
   }[];
 }
 
 const MapComponent = ({ markers }: MapProps) => {
+  const rMachine = useRef(null);
+
+  const waypoints = useMemo(
+    () => markers.map((marker) => marker.latLng),
+    [markers]
+  );
+
+  useEffect(() => {
+    if (rMachine.current) {
+      rMachine.current.setWaypoints(waypoints);
+    }
+  }, [rMachine, waypoints]);
+
   return (
     <MapContainer
       center={[-5.839294, -35.201653]} // Default center position
@@ -27,9 +43,15 @@ const MapComponent = ({ markers }: MapProps) => {
       </Marker>
       {markers.map((marker, index) => (
         <Marker key={index} position={marker.position}>
-          <Popup>{marker.address}</Popup>
+          <Popup>
+            {index + 1} - {marker.address}
+          </Popup>
         </Marker>
       ))}
+      <RoutingMachine
+        ref={rMachine}
+        waypoints={markers.map((marker) => marker.latLng)}
+      />
     </MapContainer>
   );
 };
