@@ -9,7 +9,7 @@ export function VehicleTracker() {
       {/* Header */}
       <div className="space-y-4 mb-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-xl font-semibold">Veículos</h1>
+          <h1 className="text-xl font-semibold">Entregas</h1>
         </div>
         <div className="relative">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />

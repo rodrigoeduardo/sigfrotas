@@ -12,6 +12,8 @@ import {
 import { OrdersButton } from "./OrdersButton";
 import { Order } from "@/types/order";
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
+import useGetUsers from "@/http/users/queries/use-get-users";
+import { Position, User } from "@/types/user";
 
 interface RouteManagerProps {
   selectedOrders: Order[];
@@ -22,11 +24,15 @@ export default function RouteManager({
   selectedOrders,
   setSelectedOrders,
 }: RouteManagerProps) {
-  const [driver, setDriver] = useState("");
+  const { data: drivers, isLoading: isLoadingDrivers } = useGetUsers({
+    positionFilter: Position.DRIVER,
+  });
+
+  const [driver, setDriver] = useState<User>();
 
   function handleClear() {
     setSelectedOrders([]);
-    setDriver("");
+    setDriver(undefined);
   }
 
   const calculatedWeight = useMemo(() => {
@@ -85,14 +91,23 @@ export default function RouteManager({
             <div className="text-lg font-medium">{calculatedDistance} km</div>
           </div>
           <div className="flex-1">
-            <Select value={driver} onValueChange={(value) => setDriver(value)}>
+            <Select
+              value={driver?.id.toString() ?? ""}
+              onValueChange={(value) =>
+                setDriver(drivers?.find((d) => d.id.toString() === value)) ??
+                undefined
+              }
+              disabled={isLoadingDrivers}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Selecionar motorista" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="José">José</SelectItem>
-                <SelectItem value="João">João</SelectItem>
-                <SelectItem value="Jonas">Jonas</SelectItem>
+                {drivers?.map((driver) => (
+                  <SelectItem key={driver.id} value={driver.id.toString()}>
+                    {driver.pessoa.nome} ({driver.pessoa.email})
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -101,7 +116,10 @@ export default function RouteManager({
           <Button variant="outline" className="flex-1" onClick={handleClear}>
             LIMPAR
           </Button>
-          <Button className="flex-1 bg-[#1B2B1B] hover:bg-[#2C3F2C]">
+          <Button
+            className="flex-1 bg-[#1B2B1B] hover:bg-[#2C3F2C]"
+            disabled={selectedOrders.length <= 0 || !driver}
+          >
             CADASTRAR
           </Button>
         </div>

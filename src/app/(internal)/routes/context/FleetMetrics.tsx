@@ -2,15 +2,29 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer } from "@/components/ui/chart";
+import useGetUsers from "@/http/users/queries/use-get-users";
+import { Position } from "@/types/user";
+import { useMemo } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
 
-const data = [
-  { name: "Indisponível", value: 28, color: "#FF4B55" },
-  { name: "Disponível", value: 80, color: "#0A2472" },
-  { name: "Em rota de entrega", value: 12, color: "#4B79F3" },
-];
-
 export default function FleetMetrics() {
+  const { data: drivers } = useGetUsers({
+    positionFilter: Position.DRIVER,
+  });
+
+  const data = useMemo(
+    () => [
+      { name: "Indisponível", value: 0, color: "#FF4B55" },
+      {
+        name: "Disponível",
+        value: (drivers?.length ?? 0) - 2,
+        color: "#0A2472",
+      },
+      { name: "Em rota de entrega", value: 2, color: "#4B79F3" },
+    ],
+    [drivers?.length]
+  );
+
   const totalFleet = data.reduce((acc, cur) => acc + cur.value, 0);
 
   return (

@@ -1,20 +1,20 @@
 "use client";
 
 import { LatLng } from "leaflet";
-import { useState } from "react";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  useMapEvents,
-} from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
-const MapComponent = () => {
+interface MapProps {
+  markers: {
+    position: LatLng;
+    address: string;
+  }[];
+}
+
+const MapComponent = ({ markers }: MapProps) => {
   return (
     <MapContainer
       center={[-5.839294, -35.201653]} // Default center position
-      zoom={4} // Zoom level
+      zoom={13} // Zoom level
       style={{ height: "400px", width: "100%" }}
       className="rounded-2xl z-0"
     >
@@ -25,28 +25,32 @@ const MapComponent = () => {
       <Marker position={[-5.839294, -35.201653]}>
         <Popup>Transportadora AL</Popup>
       </Marker>
-      <LocationMarker />
+      {markers.map((marker, index) => (
+        <Marker key={index} position={marker.position}>
+          <Popup>{marker.address}</Popup>
+        </Marker>
+      ))}
     </MapContainer>
   );
 };
 
-function LocationMarker() {
-  const [position, setPosition] = useState<LatLng | null>(null);
-  const map = useMapEvents({
-    click() {
-      map.locate();
-    },
-    locationfound(e) {
-      setPosition(e.latlng);
-      map.flyTo(e.latlng, map.getZoom());
-    },
-  });
+// function LocationMarker() {
+//   const [position, setPosition] = useState<LatLng | null>(null);
+//   const map = useMapEvents({
+//     click() {
+//       map.locate();
+//     },
+//     locationfound(e) {
+//       setPosition(e.latlng);
+//       map.flyTo(e.latlng, map.getZoom());
+//     },
+//   });
 
-  return position === null ? null : (
-    <Marker position={position}>
-      <Popup>You are here</Popup>
-    </Marker>
-  );
-}
+//   return position === null ? null : (
+//     <Marker position={position}>
+//       <Popup>You are here</Popup>
+//     </Marker>
+//   );
+// }
 
 export default MapComponent;

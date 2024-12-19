@@ -6,5 +6,5 @@ export type UserRegister = Omit<User, "id" | "pessoa"> & {
 };
 
 export async function registerUser(user: UserRegister) {
-  return api.post<User>("/users", user);
+  return api.post<User>("/auth/register", user);
 }
