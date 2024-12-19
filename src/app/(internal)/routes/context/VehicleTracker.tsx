@@ -3,7 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-export function VehicleTracker() {
+interface VehicleTrackerProps {
+  readyItems: {
+    id: number;
+  }[];
+}
+
+export function VehicleTracker({ readyItems }: VehicleTrackerProps) {
   return (
     <div className="w-full bg-white">
       {/* Header */}
@@ -24,7 +30,33 @@ export function VehicleTracker() {
           <TabsTrigger value="enroute">A caminho</TabsTrigger>
           <TabsTrigger value="delivered">Entregue</TabsTrigger>
         </TabsList>
-        <TabsContent value="ready" className="mt-4 space-y-4"></TabsContent>
+        <TabsContent value="ready" className="mt-4 space-y-4">
+          {readyItems.map((item) => {
+            const nowString = new Date().toLocaleString();
+            return (
+              <div
+                key={item.id}
+                className="flex items-center justify-between p-4 border rounded-lg"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-green-50 rounded-lg">
+                    <Truck className="h-5 w-5 text-green-500" />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="font-medium">EShipGO{item.id}</div>
+                    <div className="text-sm text-green-600">Pronto</div>
+                    <div className="text-xs text-muted-foreground">
+                      {nowString}
+                    </div>
+                  </div>
+                </div>
+                <Button variant="outline" size="sm">
+                  Rastrear
+                </Button>
+              </div>
+            );
+          })}
+        </TabsContent>
         <TabsContent value="enroute" className="mt-4 space-y-4">
           {/* Vehicle Items */}
           {[1, 2].map((item) => (

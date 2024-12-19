@@ -16,11 +16,17 @@ import useGetUsers from "@/http/users/queries/use-get-users";
 import { Position, User } from "@/types/user";
 
 interface RouteManagerProps {
+  readyItems: {
+    id: number;
+  }[];
+  setReadyItems: Dispatch<SetStateAction<{ id: number }[]>>;
+
   selectedOrders: Order[];
   setSelectedOrders: Dispatch<SetStateAction<Order[]>>;
 }
 
 export default function RouteManager({
+  setReadyItems,
   selectedOrders,
   setSelectedOrders,
 }: RouteManagerProps) {
@@ -33,6 +39,16 @@ export default function RouteManager({
   function handleClear() {
     setSelectedOrders([]);
     setDriver(undefined);
+  }
+
+  function handleRegister() {
+    setReadyItems((prev) => [
+      ...prev,
+      {
+        id: Math.floor(Math.random() * 900) + 100,
+      },
+    ]);
+    handleClear();
   }
 
   const calculatedWeight = useMemo(() => {
@@ -119,6 +135,7 @@ export default function RouteManager({
           <Button
             className="flex-1 bg-[#1B2B1B] hover:bg-[#2C3F2C]"
             disabled={selectedOrders.length <= 0 || !driver}
+            onClick={handleRegister}
           >
             CADASTRAR
           </Button>
