@@ -117,7 +117,7 @@ export default function Register() {
               >
                 <option value={Position.MANAGER}>Gerente</option>
                 <option value={Position.DRIVER}>Motorista</option>
-                {/* <option value={Cargo.CLIENTE}>Cliente</option> */}
+                {<option value={Position.CLIENT}>Cliente</option>}
               </select>
               <p className="text-red-500 text-xs mt-2">
                 {form.formState.errors.position?.message}
